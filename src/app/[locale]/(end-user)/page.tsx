@@ -1,6 +1,21 @@
 import Image from "next/image";
+import { TestServerAction } from "@/actions/test";
+import { getTranslations } from "next-intl/server";
+import { IPageParams } from "@/interfaces";
 
-export default function Home() {
+async function fetchData() {
+  const a = await TestServerAction("123"); // Wait for TestServerAction() to resolve
+  return a; // If you need to return the value
+}
+
+export default async function Home(params: IPageParams) {
+  const t = await getTranslations({
+    locale: params.locale,
+    namespace: "Index",
+  });
+
+  fetchData();
+
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
       <div className="z-10 max-w-5xl w-full items-center justify-between font-mono text-sm lg:flex">
@@ -15,7 +30,8 @@ export default function Home() {
             target="_blank"
             rel="noopener noreferrer"
           >
-            By{" "}
+            By
+            {t("title")}
             <Image
               src="/vercel.svg"
               alt="Vercel Logo"
