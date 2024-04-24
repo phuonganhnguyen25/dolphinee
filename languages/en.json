@@ -1,5 +1,38 @@
 {
   "Index": {
-    "title": "Hello world!"
+    "title": "Xin trào!"
+  },
+  "Layout": {
+    "Dashboard": "Dashboard",
+    "Category": "Category",
+    "Create": "Create"
+  },
+  "Category": {
+    "Create": "Create New Category",
+    "Parent": "Parent Category"
+  },
+  "Messages": {
+    "Error": {
+      "Name_Min": "Name must contain at least 1 character",
+      "Name_Max": "Name must contain at most 30 character(s)",
+      "Name_Invalid": "Invalid name. Please try another name",
+      "Required": "This field is required"
+    },
+    "Success": {
+      "Create_Category": "Create category successfully",
+      "Get_List_Category": "Get list category successfully"
+    }
+  },
+  "Form": {
+    "Name": {
+      "EN": "Name (EN)",
+      "VI": "Name (VI)"
+    },
+    "Placeholder": {
+      "Name": "Please input name here"
+    },
+    "Button": {
+      "Close": "Close"
+    }
   }
 }
