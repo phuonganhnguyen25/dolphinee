@@ -1,6 +1,6 @@
 "use server";
 
-import { ErrorInspection } from "@/helpers/error-inspection";
+import { ErrorInspection } from "@/helpers/response-error";
 import { TestValidator } from "@/validators/test/index";
 
 export async function TestServerAction(test: string) {
