@@ -1,5 +1,68 @@
 {
   "Index": {
-    "title": "Hello world!"
+    "title": "Xin trào!"
+  },
+  "Layout": {
+    "Dashboard": "Dashboard",
+    "Category": "Category",
+    "Create": "Create"
+  },
+  "Category": {
+    "Create": "Create New Category",
+    "List": "List Category",
+    "Delete": "Delete Category",
+    "Parent": "Parent Category",
+    "Edit": "Edit Category"
+  },
+  "Messages": {
+    "Error": {
+      "Name_Min": "Name must contain at least 1 character",
+      "Name_Max": "Name must contain at most 30 character(s)",
+      "Name_Invalid": "Invalid name. Please try another name",
+      "Required": "This field is required",
+      "Category_Not_Found": "Category does not exist",
+      "Invalid_Name_En": "Invalid input format. Please ensure that the input consists of alphanumeric characters, with each word separated by a single space, and starts with a letter.",
+      "Invalid_Name_Vi": "Invalid input format. Please ensure that the input starts and ends with a letter or number and contains only letters, numbers, or a combination of both.",
+      "Nothing_Update": "Nothing to Update",
+      "Update_Category": "Update category failed"
+    },
+    "Success": {
+      "Create_Category": "Create category successfully",
+      "Update_Category": "Update category successfully",
+      "Get_List_Category": "Get list category successfully",
+      "Get_Category": "Get category successfully",
+      "Delete_Category": "Delete category successfully",
+      "Change_Category_Order": "Change order category successfully"
+    },
+    "Confirm": {
+      "Delete_Category": "Are you sure you want to delete the category: {category_name}? All the sub category will be deleted."
+    }
+  },
+  "Form": {
+    "Name": {
+      "EN": "Name (EN)",
+      "VI": "Name (VI)"
+    },
+    "Placeholder": {
+      "Name": "Please input name here"
+    },
+    "Button": {
+      "Close": "Close",
+      "Create": "Create",
+      "Update": "Update",
+      "Submit": "Submit"
+    }
+  },
+  "Table": {
+    "Label": {
+      "Category_Name": "Category Name",
+      "Created_At": "Created At",
+      "Updated_At": "Updated At",
+      "Action": "Action",
+      "Order": "Order"
+    }
+  },
+  "Dashboard": {
+    "Title": "Dashboard"
   }
 }
