@@ -3,31 +3,37 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Button,
-  Divider,
   Input,
-  Modal,
-  ModalBody,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
   Select,
   SelectItem,
   useDisclosure,
 } from "@nextui-org/react";
 import { useTranslations } from "next-intl";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
-import { ICreateCategoryPayload } from "@/interfaces/category";
+import {
+  ICreateCategoryPayload,
+  IUpdateCategoryPayload,
+} from "@/interfaces/category";
 import { CreateCategoryValidator } from "@/validators/category";
 import { CreateCategoryAction } from "@/actions/category/create";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import NotificationModal from "../modal/notification";
+import { RemoveDuplicateObj } from "@/helpers/remove-dup-obj";
+import { UpdateCategoryAction } from "@/actions/category/update";
+import { isEmpty } from "lodash";
 
 type IProps = {
-  categoryList: { label: string; value: number }[];
+  categoryList: { label: string; value: number }[] | null;
+  defaultFormValue: ICreateCategoryPayload;
+  id: number | null;
 };
 
-export default function CreateCategoryForm({ categoryList }: IProps) {
-  const t_layout = useTranslations("Layout");
+export default function CreateCategoryForm({
+  categoryList,
+  defaultFormValue,
+  id,
+}: IProps) {
   const t_form = useTranslations("Form");
   const t_messages = useTranslations("Messages");
   const t_category = useTranslations("Category");
@@ -40,16 +46,27 @@ export default function CreateCategoryForm({ categoryList }: IProps) {
   const { handleSubmit, control, trigger, reset, setError } =
     useForm<ICreateCategoryPayload>({
       resolver: zodResolver(CreateCategoryValidator),
-      defaultValues: {
-        name_en: "",
-        name_vi: "",
-        parent_id: 0,
-      },
+      defaultValues: defaultFormValue,
     });
 
   const onSubmit: SubmitHandler<ICreateCategoryPayload> = async (data) => {
+    let action = async () => await CreateCategoryAction(data);
+
+    if (id) {
+      const updateData = RemoveDuplicateObj(data, defaultFormValue);
+      if (isEmpty(updateData)) {
+        setModalMsg("Error.Nothing_Update");
+        onOpen();
+        return;
+      }
+      action = async () =>
+        await UpdateCategoryAction({
+          ...updateData,
+          id,
+        } as IUpdateCategoryPayload);
+    }
     setLoading(true);
-    await CreateCategoryAction(data).then((x) => {
+    await action().then((x) => {
       setModalMsg(x.message);
 
       if (!x?.status) {
@@ -65,27 +82,20 @@ export default function CreateCategoryForm({ categoryList }: IProps) {
         setLoading(false);
       } else {
         onOpen();
-        reset();
         setLoading(false);
         router.refresh();
+        id ? reset(data) : reset();
       }
     });
   };
 
   return (
     <>
-      <Modal size={"xs"} isOpen={isOpen} onClose={onClose}>
-        <ModalContent>
-          <ModalHeader className="flex flex-col gap-1">Modal Title</ModalHeader>
-          <Divider />
-          {modal_msg && <ModalBody>{t_messages(modal_msg)}</ModalBody>}
-          <ModalFooter>
-            <Button onClick={onClose} color="danger" type="button">
-              {t_form("Button.Close")}
-            </Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
+      <NotificationModal
+        onClose={onClose}
+        isOpen={isOpen}
+        modal_msg={modal_msg}
+      />
 
       <form
         className="w-full"
@@ -149,7 +159,7 @@ export default function CreateCategoryForm({ categoryList }: IProps) {
               render={({ formState: { errors }, field }) => (
                 <Select
                   selectedKeys={[field.value]}
-                  items={categoryList}
+                  items={categoryList || []}
                   label={t_category("Parent")}
                   placeholder={t_category("Parent")}
                   isInvalid={!!errors.parent_id?.message}
@@ -173,7 +183,7 @@ export default function CreateCategoryForm({ categoryList }: IProps) {
         </div>
 
         <Button isLoading={loading} type="submit" color="primary">
-          {t_layout("Create")}
+          {t_form(id ? "Button.Update" : "Button.Create")}
         </Button>
       </form>
     </>

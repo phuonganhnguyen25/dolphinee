@@ -1,4 +1,4 @@
-export const GetLayoutMetadata = (pathname: string) => {
+export const GetLayoutMetadata: any = (pathname: string) => {
   const path_slit = pathname.split("/");
   let sidebar_active_key = "1";
 

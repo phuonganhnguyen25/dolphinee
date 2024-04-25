@@ -29,7 +29,7 @@ export async function CreateCategoryAction(body: ICreateCategoryPayload) {
       level,
     });
 
-    return SuccessInspection("Success.Create_Category", 1, null);
+    return SuccessInspection("Success.Create_Category", 1, {});
   } catch (e: any) {
     return ErrorInspection(e);
   }

@@ -22,7 +22,7 @@ export default function AdminLayoutSidebar() {
     {
       label: t("Category"),
       key: "2",
-      href: path("/category"),
+      href: path("/category/list"),
     },
   ];
 
@@ -30,12 +30,22 @@ export default function AdminLayoutSidebar() {
     <div className="w-[260px] h-screen bg-white border-r px-4 py-6 flex flex-col justify-between">
       <Listbox
         selectedKeys={[sidebar_active_key]}
-        selectionMode="single"
+        // selectionMode="single"
         aria-label="Actions"
       >
         {items.map((item) => (
-          <ListboxItem textValue={item.label} key={item.key}>
-            <Link className="w-full block" key={item.key} href={item.href}>
+          <ListboxItem
+            aria-label={item.label}
+            textValue={item.label}
+            key={item.key}
+            className={sidebar_active_key === item.key ? "bg-gray-300" : ""}
+          >
+            <Link
+              aria-label={item.label}
+              className="w-full block"
+              key={item.key}
+              href={item.href}
+            >
               {item.label}
             </Link>
           </ListboxItem>

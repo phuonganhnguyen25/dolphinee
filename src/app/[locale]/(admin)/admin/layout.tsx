@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
-import { Lato } from "next/font/google";
+import { Inter } from "next/font/google";
 import "../../globals.css";
 import { NextUIProvider } from "@nextui-org/system";
 
-const lato = Lato({ weight: "400", subsets: ["latin"] });
+const lato = Inter({ weight: "400", subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Create Next App",

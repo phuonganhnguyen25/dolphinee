@@ -1,16 +1,16 @@
 import Image from "next/image";
 import { TestServerAction } from "@/actions/test";
 import { getTranslations } from "next-intl/server";
-import { IPageParams } from "@/interfaces";
+import { IPageProps } from "@/interfaces";
 
 async function fetchData() {
   const a = await TestServerAction("123"); // Wait for TestServerAction() to resolve
   return a; // If you need to return the value
 }
 
-export default async function Home(params: IPageParams) {
+export default async function Home(props: IPageProps) {
   const t = await getTranslations({
-    locale: params.locale,
+    locale: props.params.locale,
     namespace: "Index",
   });
 

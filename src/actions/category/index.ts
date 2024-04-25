@@ -1,6 +1,10 @@
 "use server";
-import _, { pick } from "lodash";
-import { ICategory, ICreateCategoryPayload } from "@/interfaces/category";
+import _, { isEmpty, keys, pick } from "lodash";
+import {
+  ICategory,
+  ICreateCategoryPayload,
+  IUpdateCategoryPayload,
+} from "@/interfaces/category";
 import { prismaClientSingleton } from "@/prisma_client";
 
 const SELECT = {
@@ -11,6 +15,14 @@ const SELECT = {
   created_at: true,
   updated_at: true,
 };
+
+export async function PAYLOAD_CATEGORY_DEFAULT(): Promise<ICreateCategoryPayload> {
+  return {
+    name_en: "",
+    name_vi: "",
+    parent_id: 0,
+  };
+}
 
 export async function CheckCategoryName(
   body: Partial<Pick<ICreateCategoryPayload, "name_en" | "name_vi">>
@@ -115,16 +127,22 @@ export async function OnGetListCategoryWithLevel(level: number) {
       order: "asc",
     },
     select: {
-      ...pick(SELECT, ["id", "name", "level", "created_at", "updated_at"]),
-      children: {
+      ...pick(SELECT, [
+        "id",
+        "name",
+        "level",
+        "order",
+        "created_at",
+        "updated_at",
+      ]),
+      _count: {
         select: {
-          ...pick(SELECT, ["id", "name"]),
+          children: true,
         },
       },
     },
   });
 }
-
 
 export async function OnGetListCategoryAllLevel() {
   return await prismaClientSingleton.category.findMany({
@@ -135,4 +153,85 @@ export async function OnGetListCategoryAllLevel() {
       ...pick(SELECT, ["id", "name", "level", "created_at", "updated_at"]),
     },
   });
+}
+
+export async function OnGetCategoryById(id: number) {
+  return await prismaClientSingleton.category.findUnique({
+    where: {
+      id,
+    },
+    select: {
+      ...pick(SELECT, [
+        "id",
+        "name",
+        "level",
+        "order",
+        "created_at",
+        "updated_at",
+      ]),
+      parent: {
+        select: {
+          ...pick(SELECT, ["id", "name", "level", "order"]),
+        },
+      },
+      children: {
+        orderBy: {
+          order: "asc",
+        },
+        select: {
+          ...pick(SELECT, ["id", "name", "level", "order"]),
+        },
+      },
+    },
+  });
+}
+
+export async function OnUpdateCategory(
+  body: IUpdateCategoryPayload,
+  id: number
+) {
+  try {
+    let level = 1;
+    if (body.parent_id) {
+      const category = await OnGetCategoryById(body.parent_id);
+      level = category ? category?.level + 1 : 1;
+      // if (category?.children?.length) {
+      //   await prismaClientSingleton.category.updateMany({
+      //     where: {
+      //       id: {
+      //         in: category.children.map((x) => x.id),
+      //       },
+      //     },
+      //     data: { parent_id: body.parent_id },
+      //   });
+      // }
+    }
+
+    await prismaClientSingleton.category.update({
+      where: { id },
+      data: { ...body, level },
+    });
+    return true;
+  } catch (e) {
+    return false;
+  }
+}
+
+export async function OnMoveChildCategory(
+  child_ids: number[],
+  parent_id: number
+) {
+  try {
+    await prismaClientSingleton.category.updateMany({
+      where: {
+        id: {
+          in: child_ids,
+        },
+      },
+      data: { parent_id },
+    });
+    return true;
+  } catch (e) {
+    return false;
+  }
 }
