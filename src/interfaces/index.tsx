@@ -1,5 +1,8 @@
-export interface IPageParams {
-  locale: string;
+export interface IPageProps {
+  params: {
+    locale: string;
+    id: string;
+  }
 }
 
 export interface IDBFieldName {
@@ -13,7 +16,7 @@ export interface IResponse<TData> {
   errors: any[];
   message: string;
   data: {
-    data: TData;
+    data: TData | null;
     pagination: {
       page: number;
       per_page: number;

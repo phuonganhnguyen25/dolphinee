@@ -20,7 +20,7 @@ export default function RootLayout({
   return (
     <>
       <AdminLayoutContentHeader
-        left={<h2 className="font-bold text-lg">{t_category("Create")}</h2>}
+        left={<h2 className="font-bold text-lg">{t_category("Edit")}</h2>}
         right={<div />}
       />
       <CardBody>{children}</CardBody>

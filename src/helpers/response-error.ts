@@ -2,55 +2,106 @@ import { IResponse } from "@/interfaces";
 import { Prisma } from "@prisma/client";
 import { ZodError } from "zod";
 
-const DEFAULT_VALUE: IResponse<any> = {
-  status: false,
-  type: "error",
-  errors: [],
-  message: "",
-  data: {
-    data: [],
-    pagination: {
-      page: 0,
-      per_page: 0,
-      total: 0,
+class DEFAULT_VALUE_INSTANCE<TData> {
+  private res: IResponse<TData> = {
+    status: false,
+    type: "error",
+    errors: [],
+    message: "",
+    data: {
+      data: null,
+      pagination: {
+        page: 0,
+        per_page: 0,
+        total: 0,
+      },
     },
-  },
-};
+  };
+
+  constructor(
+    status: boolean,
+    type: IResponse<any>["type"],
+    errors: any,
+    message: string,
+    data: TData | any,
+    pagination: IResponse<any>["data"]["pagination"] | {}
+  ) {
+    this.res = {
+      ...this.res,
+      status,
+      type,
+      errors,
+      message,
+      data: {
+        data,
+        pagination: {
+          ...this.res.data.pagination,
+          ...pagination,
+        },
+      },
+    };
+  }
+
+  get() {
+    return this.res;
+  }
+}
 
 export function SuccessInspection<TData>(
   message: string,
   data: TData,
-  pagination: IResponse<TData>["data"]["pagination"] | null
+  pagination: IResponse<TData>["data"]["pagination"] | {}
 ) {
-  const success: IResponse<TData> = DEFAULT_VALUE;
-  success.status = true;
-  success.type = "success";
-  success.message = message;
-  success.data.data = data;
-  success.data.pagination = pagination || DEFAULT_VALUE.data.pagination;
-  return success;
+  return new DEFAULT_VALUE_INSTANCE<TData>(
+    true,
+    "success",
+    [],
+    message,
+    data,
+    pagination
+  ).get();
 }
 
 export function ErrorInspection<TData>(e: any) {
-  const error: IResponse<TData> = DEFAULT_VALUE;
-
   if (e instanceof ZodError) {
-    error.type = "validation";
-    error.status = false;
-    error.errors = e.errors;
+    return new DEFAULT_VALUE_INSTANCE<TData>(
+      false,
+      "validation",
+      e.errors,
+      "",
+      null,
+      {}
+    ).get();
   } else if (
     e instanceof Prisma.PrismaClientKnownRequestError ||
     e instanceof Prisma.PrismaClientUnknownRequestError ||
     e instanceof Prisma.PrismaClientValidationError
   ) {
-    error.type = "db";
-    error.errors = [{ message: e.message }];
+    return new DEFAULT_VALUE_INSTANCE<TData>(
+      false,
+      "db",
+      [],
+      e.message,
+      null,
+      {}
+    ).get();
   } else if (e instanceof Error) {
-    error.type = "error";
-    error.errors = [{ message: e.message }];
+    return new DEFAULT_VALUE_INSTANCE<TData>(
+      false,
+      "error",
+      [],
+      e.message,
+      null,
+      {}
+    ).get();
   } else {
-    error.type = "unknown";
-    error.errors = [{ message: "Unknown error", e: e?.toString() }];
+    return new DEFAULT_VALUE_INSTANCE<TData>(
+      false,
+      "unknown",
+      [],
+      e?.toString(),
+      null,
+      {}
+    ).get();
   }
-  return error;
 }

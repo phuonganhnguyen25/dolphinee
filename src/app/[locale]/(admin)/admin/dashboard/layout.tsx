@@ -1,7 +1,9 @@
 import AdminLayoutContentHeader from "@/components/admin/content-header";
-import { CardBody } from "@nextui-org/react";
+import AddIcon from "@/components/icons/add";
+import { Button, CardBody } from "@nextui-org/react";
 import type { Metadata } from "next";
 import { useTranslations } from "next-intl";
+import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -15,12 +17,12 @@ export default function RootLayout({
   children: React.ReactNode;
   params: { locale: string };
 }>) {
-  const t_category = useTranslations("Category");
+  const t_dashboard = useTranslations("Dashboard");
 
   return (
     <>
       <AdminLayoutContentHeader
-        left={<h2 className="font-bold text-lg">{t_category("Create")}</h2>}
+        left={<h2 className="font-bold text-lg">{t_dashboard("Title")}</h2>}
         right={<div />}
       />
       <CardBody>{children}</CardBody>
