@@ -6,6 +6,8 @@ export const GetLayoutMetadata: any = (pathname: string) => {
     sidebar_active_key = "2";
   } else if (path_slit.includes("product")) {
     sidebar_active_key = "3";
+  } else if (path_slit.includes("shop")) {
+    sidebar_active_key = "4";
   }
 
   return { sidebar_active_key };

@@ -6,7 +6,8 @@
     "Dashboard": "Dashboard",
     "Category": "Category",
     "Product": "Product",
-    "Create": "Create"
+    "Create": "Create",
+    "Shop": "Shop"
   },
   "Category": {
     "Create": "Create New Category",
@@ -91,5 +92,8 @@
     "Edit": "Edit Product",
     "Description": "Description",
     "Is_New": "Is New?"
+  },
+  "Shop": {
+    "Title": "Shop"
   }
 }
