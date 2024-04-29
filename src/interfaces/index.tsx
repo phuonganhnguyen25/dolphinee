@@ -2,7 +2,14 @@ export interface IPageProps {
   params: {
     locale: string;
     id: string;
-  }
+  };
+  searchParams: IPagination;
+}
+
+export interface IPagination {
+  page: number;
+  per_page: number;
+  total: number;
 }
 
 export interface IDBFieldName {
@@ -17,11 +24,7 @@ export interface IResponse<TData> {
   message: string;
   data: {
     data: TData | null;
-    pagination: {
-      page: number;
-      per_page: number;
-      total: number;
-    };
+    pagination: IPagination;
   };
 }
 

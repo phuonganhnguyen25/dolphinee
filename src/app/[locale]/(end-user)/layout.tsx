@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Lato } from "next/font/google";
 import { NextUIProvider } from "@nextui-org/system";
 import "../globals.css";
+import { ReactNode } from "react";
 
 const lato = Lato({ weight: "400", subsets: ["latin"] });
 
@@ -14,7 +15,7 @@ export default function RootLayout({
   children,
   params: { locale },
 }: Readonly<{
-  children: React.ReactNode;
+  children: ReactNode;
   params: { locale: string };
 }>) {
   return (

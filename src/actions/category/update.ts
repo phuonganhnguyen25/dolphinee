@@ -1,10 +1,7 @@
 "use server";
 
 import { ErrorInspection, SuccessInspection } from "@/helpers/response-error";
-import {
-  ICreateCategoryPayload,
-  IUpdateCategoryPayload,
-} from "@/interfaces/category";
+import { IUpdateCategoryPayload } from "@/interfaces/category";
 import { UpdateCategoryValidator } from "@/validators/category";
 import {
   CheckCategoryName,
@@ -12,8 +9,8 @@ import {
   OnMoveChildCategory,
   OnUpdateCategory,
 } from ".";
-import { ZodError } from "zod";
 import { keys, pick } from "lodash";
+import { ThrowError, ThrowZodError } from "@/helpers/throw-error";
 
 export async function UpdateCategoryAction(body: IUpdateCategoryPayload) {
   try {
@@ -29,13 +26,13 @@ export async function UpdateCategoryAction(body: IUpdateCategoryPayload) {
           arr.push({ path: [x], message: "Error.Name_Invalid" });
         });
 
-        throw new ZodError(arr);
+        ThrowZodError(arr);
       }
     }
 
     const update_body: any = {};
 
-    if (!body.id) throw new Error("Error.Update_Category");
+    if (!body.id) return ThrowError<object>("Error.Update_Category");
 
     const existing = await OnGetCategoryById(body.id);
     if (existing) {
@@ -52,12 +49,12 @@ export async function UpdateCategoryAction(body: IUpdateCategoryPayload) {
     }
 
     const res = await OnUpdateCategory(update_body, body.id);
-    if (!res) throw new Error("Error.Update_Category");
+    if (!res) return ThrowError<object>("Error.Update_Category");
 
     if (existing?.children?.length && body.parent_id) {
       await OnMoveChildCategory(
         existing.children.map((x) => x.id),
-        body.parent_id
+        body.parent_id,
       );
     }
 

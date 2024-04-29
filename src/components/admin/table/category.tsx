@@ -90,8 +90,10 @@ export default function CategoryTable(props: IProps) {
                   radius: "lg",
                   src: "",
                 }}
-                description={d.name.name_vi}
-                name={d.name.name_en}
+                description={
+                  params.locale === "vi" ? d.name.name_en : d.name.name_vi
+                }
+                name={params.locale === "vi" ? d.name.name_vi : d.name.name_en}
               />
             </Badge>
           );
@@ -163,7 +165,7 @@ export default function CategoryTable(props: IProps) {
           return cellValue;
       }
     },
-    []
+    [],
   );
   return (
     <>

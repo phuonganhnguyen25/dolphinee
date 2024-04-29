@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Card } from "@nextui-org/react";
 import AdminLayoutSidebar from "@/components/admin/sidebar";
 import { NextIntlClientProvider, useMessages } from "next-intl";
+import { ReactNode } from "react";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -10,8 +11,8 @@ export const metadata: Metadata = {
 
 export default function RootLayout(
   props: Readonly<{
-    children: React.ReactNode;
-  }>
+    children: ReactNode;
+  }>,
 ) {
   const messages = useMessages();
 
@@ -28,11 +29,11 @@ export default function RootLayout(
             Your Header Content Here
           </header>
 
-          <nav className="bg-gray-200 py-2 px-6">
-            Your Breadcrumb Content Here
-          </nav>
+          {/*<nav className="bg-gray-200 py-2 px-6">*/}
+          {/*  Your Breadcrumb Content Here*/}
+          {/*</nav>*/}
 
-          <Card className="py-2 px-2 m-4" shadow="none">
+          <Card className="px-4" radius={"none"} shadow="none">
             {props.children}
           </Card>
         </div>

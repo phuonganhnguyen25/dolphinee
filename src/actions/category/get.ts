@@ -28,6 +28,26 @@ export async function GetListSelectCategoryLevel1() {
   }
 }
 
+export async function GetListSelectCategoryAllLevelAction() {
+  try {
+    const select_category = [{ label: "-", value: 0 }];
+    const categories = await OnGetListCategoryAllLevel();
+
+    const res: any = categories.map((item: any) => ({
+      label: `${item.name.name_en}/${item.name.name_vi}`,
+      value: item.id,
+    }));
+
+    return SuccessInspection<{ label: string; value: number }[]>(
+      "Success.Get_List_Category",
+      [...select_category, ...res],
+      {}
+    );
+  } catch (e: any) {
+    return ErrorInspection<{ label: string; value: number }[]>(e);
+  }
+}
+
 export async function GetListCategoryLevel1() {
   try {
     const res: any = await OnGetListCategoryWithLevel(1);

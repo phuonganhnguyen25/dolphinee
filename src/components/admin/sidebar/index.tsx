@@ -24,6 +24,11 @@ export default function AdminLayoutSidebar() {
       key: "2",
       href: path("/category/list"),
     },
+    {
+      label: t("Product"),
+      key: "3",
+      href: path("/product/list"),
+    },
   ];
 
   return (

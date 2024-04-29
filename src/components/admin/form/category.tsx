@@ -1,13 +1,7 @@
 "use client";
 // @ts-ignore
 import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  Button,
-  Input,
-  Select,
-  SelectItem,
-  useDisclosure,
-} from "@nextui-org/react";
+import { Button, Input, useDisclosure } from "@nextui-org/react";
 import { useTranslations } from "next-intl";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import {
@@ -22,18 +16,14 @@ import NotificationModal from "../modal/notification";
 import { RemoveDuplicateObj } from "@/helpers/remove-dup-obj";
 import { UpdateCategoryAction } from "@/actions/category/update";
 import { isEmpty } from "lodash";
+import SelectCategoryLv1 from "../select/category-lv1";
 
 type IProps = {
-  categoryList: { label: string; value: number }[] | null;
   defaultFormValue: ICreateCategoryPayload;
   id: number | null;
 };
 
-export default function CreateCategoryForm({
-  categoryList,
-  defaultFormValue,
-  id,
-}: IProps) {
+export default function CreateCategoryForm({ defaultFormValue, id }: IProps) {
   const t_form = useTranslations("Form");
   const t_messages = useTranslations("Messages");
   const t_category = useTranslations("Category");
@@ -75,7 +65,7 @@ export default function CreateCategoryForm({
             setError(
               err.path[0],
               { message: err.message },
-              { shouldFocus: true }
+              { shouldFocus: true },
             );
           });
         }
@@ -116,7 +106,7 @@ export default function CreateCategoryForm({
                   value={field.value}
                   onChange={(e) => {
                     field.onChange(e.target.value);
-                    trigger("name_en");
+                    trigger("name_en").then();
                   }}
                   errorMessage={
                     errors.name_en?.message &&
@@ -139,7 +129,7 @@ export default function CreateCategoryForm({
                   isInvalid={!!errors.name_vi?.message}
                   onChange={(e) => {
                     field.onChange(e.target.value);
-                    trigger("name_vi");
+                    trigger("name_vi").then();
                   }}
                   errorMessage={
                     errors.name_vi?.message &&
@@ -157,25 +147,21 @@ export default function CreateCategoryForm({
               name="parent_id"
               control={control}
               render={({ formState: { errors }, field }) => (
-                <Select
-                  selectedKeys={[field.value]}
-                  items={categoryList || []}
-                  label={t_category("Parent")}
-                  placeholder={t_category("Parent")}
-                  isInvalid={!!errors.parent_id?.message}
-                  errorMessage={
-                    errors.parent_id?.message &&
-                    t_messages(errors.parent_id.message)
-                  }
-                  onChange={(e) => {
-                    field.onChange(Number(e.target.value));
-                    trigger("parent_id");
+                <SelectCategoryLv1<ICreateCategoryPayload, "parent_id">
+                  metadata={{
+                    label: t_category("Text"),
+                    placeholder: t_category("Text"),
+                    type: "number",
+                    default_value: field.value,
                   }}
-                >
-                  {(item) => (
-                    <SelectItem key={item.value}>{item.label}</SelectItem>
-                  )}
-                </Select>
+                  field={field}
+                  trigger={trigger}
+                  errors={{
+                    show: !!errors.parent_id?.message,
+                    message: errors.parent_id?.message || "",
+                  }}
+                  form_key="parent_id"
+                />
               )}
             />
           </div>

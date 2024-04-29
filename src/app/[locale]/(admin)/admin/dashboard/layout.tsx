@@ -1,9 +1,8 @@
 import AdminLayoutContentHeader from "@/components/admin/content-header";
-import AddIcon from "@/components/icons/add";
-import { Button, CardBody } from "@nextui-org/react";
+import { CardBody } from "@nextui-org/react";
 import type { Metadata } from "next";
 import { useTranslations } from "next-intl";
-import Link from "next/link";
+import { ReactNode } from "react";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -12,9 +11,8 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-  params: { locale },
 }: Readonly<{
-  children: React.ReactNode;
+  children: ReactNode;
   params: { locale: string };
 }>) {
   const t_dashboard = useTranslations("Dashboard");

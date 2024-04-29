@@ -4,6 +4,7 @@ import { ErrorInspection, SuccessInspection } from "@/helpers/response-error";
 import { IChangeCategoryOrderPayload } from "@/interfaces/category";
 import { prismaClientSingleton } from "@/prisma_client";
 import { NewestCategoryOrder } from ".";
+import { ThrowError } from "@/helpers/throw-error";
 
 export async function OnChangeOrderCategory(body: IChangeCategoryOrderPayload) {
   try {
@@ -18,7 +19,7 @@ export async function OnChangeOrderCategory(body: IChangeCategoryOrderPayload) {
       },
     });
 
-    if (!category || !target) throw new Error("Error_Category_Not_Found");
+    if (!category || !target) return ThrowError("Error_Category_Not_Found");
 
     return await prismaClientSingleton
       .$transaction([
