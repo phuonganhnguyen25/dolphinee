@@ -1,11 +1,12 @@
 "use server";
-import _, { isEmpty, keys, pick } from "lodash";
+import _, { pick } from "lodash";
 import {
   ICategory,
   ICreateCategoryPayload,
   IUpdateCategoryPayload,
 } from "@/interfaces/category";
 import { prismaClientSingleton } from "@/prisma_client";
+import { DBNameChecker } from "@/helpers/db-name-checker";
 
 const SELECT = {
   id: true,
@@ -25,47 +26,11 @@ export async function PAYLOAD_CATEGORY_DEFAULT(): Promise<ICreateCategoryPayload
 }
 
 export async function CheckCategoryName(
-  body: Partial<Pick<ICreateCategoryPayload, "name_en" | "name_vi">>
+  body: Partial<Pick<ICreateCategoryPayload, "name_en" | "name_vi">>,
 ): Promise<string[]> {
   if (_.isEmpty(body)) return [];
 
-  let checker = [];
-
-  if (body?.name_en && !body?.name_vi) {
-    checker = [
-      {
-        name: {
-          path: ["name_en"],
-          equals: body.name_en,
-        },
-      },
-    ];
-  } else if (!body?.name_en && body?.name_vi) {
-    checker = [
-      {
-        name: {
-          path: ["name_vi"],
-          equals: body.name_vi,
-        },
-      },
-    ];
-  } else {
-    checker = [
-      {
-        name: {
-          path: ["name_en"],
-          equals: body.name_en,
-        },
-      },
-      {
-        name: {
-          path: ["name_vi"],
-          equals: body.name_vi,
-        },
-      },
-    ];
-  }
-
+  const checker: any = DBNameChecker(body);
   const res = (await prismaClientSingleton.category.findMany({
     where: {
       OR: checker,
@@ -76,17 +41,13 @@ export async function CheckCategoryName(
     },
   })) as Pick<ICategory, "id" | "name">[] | any;
 
-  const duplicate_fields = res.map(
-    (duplicate: Pick<ICategory, "id" | "name">) => {
-      if (duplicate.name.name_en === body.name_en) {
-        return "name_en";
-      } else if (duplicate.name.name_vi === body.name_vi) {
-        return "name_vi";
-      }
+  return res.map((duplicate: Pick<ICategory, "id" | "name">) => {
+    if (duplicate.name.name_en === body.name_en) {
+      return "name_en";
+    } else if (duplicate.name.name_vi === body.name_vi) {
+      return "name_vi";
     }
-  );
-
-  return duplicate_fields;
+  });
 }
 
 export async function NewestCategoryOrder() {
@@ -103,9 +64,9 @@ export async function NewestCategoryOrder() {
 }
 
 export async function OnCreateCategory(
-  body: ICreateCategoryPayload & Pick<ICategory, "level" | "order">
+  body: ICreateCategoryPayload & Pick<ICategory, "level" | "order">,
 ) {
-  return await prismaClientSingleton.category.create({
+  return prismaClientSingleton.category.create({
     data: {
       name: {
         name_en: body.name_en,
@@ -119,7 +80,7 @@ export async function OnCreateCategory(
 }
 
 export async function OnGetListCategoryWithLevel(level: number) {
-  return await prismaClientSingleton.category.findMany({
+  return prismaClientSingleton.category.findMany({
     where: {
       level,
     },
@@ -145,7 +106,7 @@ export async function OnGetListCategoryWithLevel(level: number) {
 }
 
 export async function OnGetListCategoryAllLevel() {
-  return await prismaClientSingleton.category.findMany({
+  return prismaClientSingleton.category.findMany({
     orderBy: {
       order: "asc",
     },
@@ -156,7 +117,7 @@ export async function OnGetListCategoryAllLevel() {
 }
 
 export async function OnGetCategoryById(id: number) {
-  return await prismaClientSingleton.category.findUnique({
+  return prismaClientSingleton.category.findUnique({
     where: {
       id,
     },
@@ -188,7 +149,7 @@ export async function OnGetCategoryById(id: number) {
 
 export async function OnUpdateCategory(
   body: IUpdateCategoryPayload,
-  id: number
+  id: number,
 ) {
   try {
     let level = 1;
@@ -219,7 +180,7 @@ export async function OnUpdateCategory(
 
 export async function OnMoveChildCategory(
   child_ids: number[],
-  parent_id: number
+  parent_id: number,
 ) {
   try {
     await prismaClientSingleton.category.updateMany({

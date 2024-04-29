@@ -12,15 +12,43 @@ model Init {
 }
 
 model Category {
-  id         Int        @id @default(autoincrement())
-  created_at DateTime   @default(now())
-  updated_at DateTime   @default(now()) @updatedAt
-  name       Json
-  order      Int
-  parent_id  Int?
-  level      Int        @default(1)
-  parent     Category?  @relation("parent_child", fields: [parent_id], references: [id], onDelete: Cascade)
-  children   Category[] @relation("parent_child")
+  id               Int               @id @default(autoincrement())
+  created_at       DateTime          @default(now())
+  updated_at       DateTime          @default(now()) @updatedAt
+  name             Json
+  order            Int
+  parent_id        Int?
+  level            Int               @default(1)
+  parent           Category?         @relation("parent_child", fields: [parent_id], references: [id], onDelete: Cascade)
+  children         Category[]        @relation("parent_child")
+  product_category ProductCategory[] @relation("category")
 
   @@unique([order, level])
+}
+
+model Product {
+  id               Int              @id @default(autoincrement())
+  created_at       DateTime         @default(now())
+  updated_at       DateTime         @default(now()) @updatedAt
+  name             Json
+  description      String
+  sku              String
+  is_new           Boolean
+  status           PRODUCT_STATUS   @default(DRAFT)
+  price_en         Float            @default(0)
+  price_vi         Float            @default(0)
+  product_category ProductCategory? @relation("product")
+}
+
+model ProductCategory {
+  id          Int       @id @default(autoincrement())
+  product_id  Int       @unique
+  category_id Int?
+  category    Category? @relation("category", fields: [category_id], references: [id])
+  product     Product   @relation("product", fields: [product_id], references: [id])
+}
+
+enum PRODUCT_STATUS {
+  DRAFT
+  PUBLISHED
 }

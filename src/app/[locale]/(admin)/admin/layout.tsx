@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "../../globals.css";
 import { NextUIProvider } from "@nextui-org/system";
+import { ReactNode } from "react";
 
 const lato = Inter({ weight: "400", subsets: ["latin"] });
 
@@ -14,15 +15,13 @@ export default function RootLayout({
   children,
   params: { locale },
 }: Readonly<{
-  children: React.ReactNode;
+  children: ReactNode;
   params: { locale: string };
 }>) {
   return (
     <html lang={locale}>
       <body className={lato.className}>
-        <NextUIProvider>
-          {children}
-        </NextUIProvider>
+        <NextUIProvider>{children}</NextUIProvider>
       </body>
     </html>
   );

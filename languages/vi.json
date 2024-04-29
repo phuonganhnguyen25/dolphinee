@@ -5,6 +5,7 @@
   "Layout": {
     "Dashboard": "Dashboard",
     "Category": "Category",
+    "Product": "Product",
     "Create": "Create"
   },
   "Category": {
@@ -12,7 +13,8 @@
     "List": "List Category",
     "Delete": "Delete Category",
     "Parent": "Parent Category",
-    "Edit": "Edit Category"
+    "Edit": "Edit Category",
+    "Text": "Category"
   },
   "Messages": {
     "Error": {
@@ -24,7 +26,11 @@
       "Invalid_Name_En": "Invalid input format. Please ensure that the input consists of alphanumeric characters, with each word separated by a single space, and starts with a letter.",
       "Invalid_Name_Vi": "Invalid input format. Please ensure that the input starts and ends with a letter or number and contains only letters, numbers, or a combination of both.",
       "Nothing_Update": "Nothing to Update",
-      "Update_Category": "Update category failed"
+      "Update_Category": "Update category failed",
+      "Price_Min": "Price must be at least 1",
+      "Get_Product": "Product  does not exist",
+      "Update_Product": "Update product failed",
+      "Product_Not_Found": "Product does not exist"
     },
     "Success": {
       "Create_Category": "Create category successfully",
@@ -32,7 +38,10 @@
       "Get_List_Category": "Get list category successfully",
       "Get_Category": "Get category successfully",
       "Delete_Category": "Delete category successfully",
-      "Change_Category_Order": "Change order category successfully"
+      "Change_Category_Order": "Change order category successfully",
+      "Create_Product": "Create product successfully",
+      "Get_Product": "Get product successfully",
+      "Update_Product": "Update product successfully"
     },
     "Confirm": {
       "Delete_Category": "Are you sure you want to delete the category: {category_name}? All the sub category will be deleted."
@@ -43,8 +52,13 @@
       "EN": "Name (EN)",
       "VI": "Name (VI)"
     },
+    "Price": {
+      "EN": "Price (EN)",
+      "VI": "Price (VI)"
+    } ,
     "Placeholder": {
-      "Name": "Please input name here"
+      "Name": "Please input name here",
+      "Price": "Please input price here"
     },
     "Button": {
       "Close": "Close",
@@ -59,10 +73,23 @@
       "Created_At": "Created At",
       "Updated_At": "Updated At",
       "Action": "Action",
-      "Order": "Order"
+      "Order": "Order",
+      "SKU": "SKU",
+      "Product_Name": "Product Name",
+      "Price": "Price",
+      "Status": "Status"
     }
   },
   "Dashboard": {
     "Title": "Dashboard"
+  },
+  "Product": {
+    "Create": "Create New Product",
+    "List": "List Product",
+    "Delete": "Delete Product",
+    "Parent": "Parent Product",
+    "Edit": "Edit Product",
+    "Description": "Description",
+    "Is_New": "Is New?"
   }
 }

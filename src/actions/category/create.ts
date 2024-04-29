@@ -4,7 +4,7 @@ import { ErrorInspection, SuccessInspection } from "@/helpers/response-error";
 import { ICreateCategoryPayload } from "@/interfaces/category";
 import { CreateCategoryValidator } from "@/validators/category";
 import { CheckCategoryName, NewestCategoryOrder, OnCreateCategory } from ".";
-import { ZodError } from "zod";
+import { ThrowZodError } from "@/helpers/throw-error";
 
 export async function CreateCategoryAction(body: ICreateCategoryPayload) {
   try {
@@ -16,8 +16,7 @@ export async function CreateCategoryAction(body: ICreateCategoryPayload) {
       dupName.map((x) => {
         arr.push({ path: [x], message: "Error.Name_Invalid" });
       });
-
-      throw new ZodError(arr);
+      ThrowZodError(arr);
     }
 
     const order = await NewestCategoryOrder();
@@ -29,8 +28,8 @@ export async function CreateCategoryAction(body: ICreateCategoryPayload) {
       level,
     });
 
-    return SuccessInspection("Success.Create_Category", 1, {});
+    return SuccessInspection<any>("Success.Create_Category", 1, {});
   } catch (e: any) {
-    return ErrorInspection(e);
+    return ErrorInspection<any>(e);
   }
 }

@@ -3,7 +3,7 @@ import { Prisma } from "@prisma/client";
 import { ZodError } from "zod";
 
 class DEFAULT_VALUE_INSTANCE<TData> {
-  private res: IResponse<TData> = {
+  private readonly res: IResponse<TData> = {
     status: false,
     type: "error",
     errors: [],
@@ -24,7 +24,7 @@ class DEFAULT_VALUE_INSTANCE<TData> {
     errors: any,
     message: string,
     data: TData | any,
-    pagination: IResponse<any>["data"]["pagination"] | {}
+    pagination: IResponse<any>["data"]["pagination"] | {},
   ) {
     this.res = {
       ...this.res,
@@ -50,7 +50,7 @@ class DEFAULT_VALUE_INSTANCE<TData> {
 export function SuccessInspection<TData>(
   message: string,
   data: TData,
-  pagination: IResponse<TData>["data"]["pagination"] | {}
+  pagination: IResponse<TData>["data"]["pagination"] | {},
 ) {
   return new DEFAULT_VALUE_INSTANCE<TData>(
     true,
@@ -58,7 +58,7 @@ export function SuccessInspection<TData>(
     [],
     message,
     data,
-    pagination
+    pagination,
   ).get();
 }
 
@@ -70,7 +70,7 @@ export function ErrorInspection<TData>(e: any) {
       e.errors,
       "",
       null,
-      {}
+      {},
     ).get();
   } else if (
     e instanceof Prisma.PrismaClientKnownRequestError ||
@@ -83,7 +83,7 @@ export function ErrorInspection<TData>(e: any) {
       [],
       e.message,
       null,
-      {}
+      {},
     ).get();
   } else if (e instanceof Error) {
     return new DEFAULT_VALUE_INSTANCE<TData>(
@@ -92,7 +92,7 @@ export function ErrorInspection<TData>(e: any) {
       [],
       e.message,
       null,
-      {}
+      {},
     ).get();
   } else {
     return new DEFAULT_VALUE_INSTANCE<TData>(
@@ -101,7 +101,7 @@ export function ErrorInspection<TData>(e: any) {
       [],
       e?.toString(),
       null,
-      {}
+      {},
     ).get();
   }
 }
