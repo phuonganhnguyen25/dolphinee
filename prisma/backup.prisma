@@ -48,28 +48,20 @@ model ProductCategory {
   product     Product   @relation("product", fields: [product_id], references: [id])
 }
 
-model City {
-  id        Int        @id @default(autoincrement())
-  name      String     @unique
-  slug      String
-  districts District[] @relation("city-district")
-}
-
-model District {
-  id        Int    @id @default(autoincrement())
+model Location {
+  id        Int             @id @default(autoincrement())
   name      String
   slug      String
-  parent_id Int
-  city      City   @relation("city-district", fields: [parent_id], references: [id])
-  wards     Ward[] @relation("district-ward")
+  target    LOCATION_TARGET @default(CITY)
+  parent_id Int?
+  parent    Location?       @relation("parent_child", fields: [parent_id], references: [id], onDelete: Cascade)
+  children  Location[]      @relation("parent_child")
 }
 
-model Ward {
-  id        Int      @id @default(autoincrement())
-  name      String
-  slug      String
-  parent_id Int
-  district  District @relation("district-ward", fields: [parent_id], references: [id])
+enum LOCATION_TARGET {
+  CITY
+  DISTRICT
+  WARD
 }
 
 enum PRODUCT_STATUS {
