@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client";
+import { LOCATION_TARGET, PrismaClient } from "@prisma/client";
 
 const cities = [
   {
@@ -2019,16 +2019,26 @@ const wards = [
 const prisma: any = new PrismaClient();
 
 async function main() {
-  await prisma.city.createMany({
-    data: cities,
+  await prisma.location.createMany({
+    data: cities.map((city) => ({
+      ...city,
+      parent_id: null,
+      target: LOCATION_TARGET["CITY"],
+    })),
   });
 
-  await prisma.district.createMany({
-    data: districts,
+  await prisma.location.createMany({
+    data: districts.map((district) => ({
+      ...district,
+      target: LOCATION_TARGET["DISTRICT"],
+    })),
   });
 
-  await prisma.ward.createMany({
-    data: wards,
+  await prisma.location.createMany({
+    data: wards.map((ward) => ({
+      ...ward,
+      target: LOCATION_TARGET["WARD"],
+    })),
   });
 }
 
